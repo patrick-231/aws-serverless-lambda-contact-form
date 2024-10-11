@@ -8,7 +8,6 @@ const ContactForm = () => {
   const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => {
-    // Basic email format validation
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
@@ -16,11 +15,9 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset feedback
     setFeedback("");
     setLoading(true);
 
-    // Validate input
     if (!name || !email || !message) {
       setFeedback("All fields are required.");
       setLoading(false);
