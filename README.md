@@ -1,71 +1,71 @@
-# Getting Started with Create React App
+# Serverless Contact Form
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a modern serverless contact form built using **AWS Lambda**, **Amazon SES (Simple Email Service)**, **React**, and **Tailwind CSS**. The form allows users to send messages directly from a web interface, and emails are delivered to the specified recipient email address using AWS SES. The backend logic is fully serverless, powered by AWS Lambda, making it highly scalable and cost-efficient.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Serverless architecture using AWS Lambda
+- Email sending functionality using Amazon SES
+- Input validation for name, email, and message
+- Modern UI design using React and Tailwind CSS
+- Completely free to run using AWS Free Tier (within limits)
 
-### `npm start`
+## Table of Contents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Getting Started](#getting-started)
+- [Architecture Overview](#architecture-overview)
+- [Setup and Deployment](#setup-and-deployment)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+These instructions will help you set up and deploy the project on your local machine for development and testing purposes.
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before you begin, ensure that you have the following installed:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Node.js** (v14 or higher)
+- **AWS CLI** (configured with your AWS credentials)
+- **AWS Account** (with SES verified email addresses)
+- **VS Code** (or your preferred IDE)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installing
 
-### `npm run eject`
+1. Clone the repository:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone https://github.com/patrick-231/aws-serverless-lambda-contact-form.git
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Navigate to the project directory:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+cd serverless-contact-form-app
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Install dependencies:
 
-## Learn More
+```bash
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Configure AWS SDK in your project and ensure your Lambda function is set up to use AWS SES for sending emails.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Architecture Overview
 
-### Code Splitting
+This project is a serverless contact form with the following architecture:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **Frontend:** React + Tailwind CSS for building the user interface.
+- **Backend:** AWS Lambda function handles form submissions and email sending.
+- **Email Service:** AWS SES for sending emails to the form owner's email address.
 
-### Analyzing the Bundle Size
+### Setup and Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# aws-serverless-lambda-contact-form
+1. AWS SES Configuration
+   Before deploying the application, configure SES for sending emails:
