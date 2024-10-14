@@ -1,9 +1,11 @@
 const AWS = require("aws-sdk");
-const ses = new AWS.SES({ region: "eu-central-1" }); // e.g., us-east-1
+const ses = new AWS.SES({ region: "eu-central-1" });
+require("dotenv").config(); // Load environment variables from .env
 
 exports.handler = async (event) => {
   const { name, email, message } = JSON.parse(event.body);
 
+  // Input validation
   if (!name || !email || !message) {
     return {
       statusCode: 400,
@@ -11,6 +13,7 @@ exports.handler = async (event) => {
     };
   }
 
+  // Basic email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return {
@@ -19,9 +22,10 @@ exports.handler = async (event) => {
     };
   }
 
+  // SES email parameters
   const params = {
     Destination: {
-      ToAddresses: [email],
+      ToAddresses: [email], // Use the user's email here
     },
     Message: {
       Body: {
@@ -29,9 +33,10 @@ exports.handler = async (event) => {
       },
       Subject: { Data: "Contact Form Submission" },
     },
-    Source: "putradefx@gmail.com",
+    Source: process.env.SOURCE_EMAIL, // Use the source email from the .env file
   };
 
+  // Send email using AWS SES
   try {
     await ses.sendEmail(params).promise();
 

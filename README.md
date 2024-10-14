@@ -4,23 +4,24 @@ This is a modern serverless contact form built using **AWS Lambda**, **Amazon SE
 
 ## Features
 
-- Serverless architecture using AWS Lambda
-- Email sending functionality using Amazon SES
-- Input validation for name, email, and message
-- Modern UI design using React and Tailwind CSS
-- Completely free to run using AWS Free Tier (within limits)
+- Serverless architecture: No need to manage servers. The backend is powered by AWS Lambda.
+- Email sending via AWS SES: Users' messages are sent directly to your email address using Amazon's Simple Email Service.
+- Form validation: The form includes basic client-side and server-side validation to ensure valid input before sending.
+- Environment variable management: Sensitive information like email addresses are managed through environment variables using dotenv.
+- CStyled with Tailwind CSS: A modern, responsive design built using the utility-first framework Tailwind CSS.
 
-## Table of Contents
+## Demo
 
-- [Getting Started](#getting-started)
-- [Architecture Overview](#architecture-overview)
-- [Setup and Deployment](#setup-and-deployment)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+![UI Screenshot](appUI.png)
 
----
+You can try out the form on the live demo link (if hosted) or run it locally by following the instructions below.
+
+## Tech Stack
+
+- Frontend: React, Tailwind CSS
+- Backend: AWS Lambda, AWS SES
+- Deployment: AWS Lambda & S3
+- Environment Management: dotenv
 
 ## Getting Started
 
@@ -57,15 +58,113 @@ npm install
 
 4. Configure AWS SDK in your project and ensure your Lambda function is set up to use AWS SES for sending emails.
 
-### Architecture Overview
+5. Create a .env file in the project root and add your email address for AWS SES:
 
-This project is a serverless contact form with the following architecture:
+```bash
+SOURCE_EMAIL=your-email@example.com
+```
 
-- **Frontend:** React + Tailwind CSS for building the user interface.
-- **Backend:** AWS Lambda function handles form submissions and email sending.
-- **Email Service:** AWS SES for sending emails to the form owner's email address.
+### Running the App Locally
 
-### Setup and Deployment
+1. To start the React development server, run:
 
-1. AWS SES Configuration
-   Before deploying the application, configure SES for sending emails:
+```bash
+npm start
+```
+
+2. Visit http://localhost:3000 in your browser.
+
+### Deploying to AWS Lambda
+
+To deploy the Lambda function, zip the necessary files and upload them via the AWS Lambda console or use the Serverless framework (if configured):
+
+1. Run the following command to create a .zip of your Lambda function:
+
+```bash
+zip -r contact-form.zip . -x "*.git*" "node_modules/*"
+```
+
+2. Upload the zip to your AWS Lambda function using the AWS Console or CLI.
+3. Configure your environment variables (like SOURCE_EMAIL) in the Lambda console.
+
+### Environment Variables
+
+The following environment variable should be added to your AWS Lambda configuration:
+
+```bash
+SOURCE_EMAIL=your-email@example.com
+```
+
+### Tailwind CSS Styling
+
+The form is styled using Tailwind CSS. You can customize the form's appearance by editing the App.js or adding more styles in index.css.
+
+### Example Lambda Function
+
+Here's a basic example of the Lambda function responsible for handling the form submissions:
+
+```bash
+const AWS = require("aws-sdk");
+const ses = new AWS.SES({ region: "eu-central-1" });
+require("dotenv").config();  // Load environment variables from .env
+
+exports.handler = async (event) => {
+  const { name, email, message } = JSON.parse(event.body);
+
+  // Input validation
+  if (!name || !email || !message) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: "All fields are required." }),
+    };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: "Please enter a valid email address." }),
+    };
+  }
+
+  const params = {
+    Destination: {
+      ToAddresses: [email],
+    },
+    Message: {
+      Body: {
+        Text: { Data: `Message from ${name} (${email}):\n\n${message}` },
+      },
+      Subject: { Data: "Contact Form Submission" },
+    },
+    Source: process.env.SOURCE_EMAIL,
+  };
+
+  try {
+    await ses.sendEmail(params).promise();
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Email sent successfully!" }),
+    };
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Failed to send email. Please try again later.",
+      }),
+    };
+  }
+};
+
+```
+
+### License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+### Acknowledgements
+
+- [AWS SES Documentation](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/Welcome.html)
+- [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
+- [Tailwind CSS](https://tailwindcss.com)
